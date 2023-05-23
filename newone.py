@@ -35,21 +35,15 @@ ax.plot_surface(x, y, z, color='r', alpha = 0.4,antialiased=True)
 
 
 
-# Plot points on the sphere using polar coordinates BLUE
+#AS ALTERAÇÕES ABAIXO SÃO AS QUE EU FIZ, E QUE FUNCIONARAM
 
-#for d in range(-200, 200, 1):
-#    for l in range(-200, 200, 1):
-#        z = (d + 0j) + l*(0 + 1j)
-#        a, b, c = complex_to_point(z)
-#        ax.plot_surface(a, b, c, color='g', alpha=0.8, antialiased=True)
+d, l = np.mgrid[-200:200:0.1, -200:200:0.1] #o mgrid cria uma matriz com os valores de d e l, que vão de -200 a 200 com um step de 0.1, resultando em uma matriz 4000x4000
 
+z1 = d + l*1j # z é o nosso número complexo, que vai de -200 - 200i até 200 + 200i, z também é uma mgrid que vai de -200 - 200i até 200 + 200i, ou seja z é uma matriz 4000x4000
 
-# we're gonna plot points that satisfies the equation z = d + li, where d and l are integers that go from -200 to 200 with a 0.1 step using mgrid
-d, l = np.mgrid[-200:200:1, -200:200:1]
-z = d + l*1j
-# we need to take eache part and convert it to a point on the sphere
-a, b, c = complex_to_point(z)
+a, b, c = complex_to_point(z1) # aplicamos a função complex_to_point para cada valor de z, e armazenamos os valores em a, b e c. que são as coordenadas X, Y e Z dos pontos que vamos plotar
 
+# plotamos os pontos na esfera
 ax.plot_surface(a, b, c, color='g', antialiased=False)
 
 # Set an equal aspect to the sphere
