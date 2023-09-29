@@ -90,7 +90,7 @@ def on_click(event):
         xmax = -1.5 + deltaX
         ymin = 0 - deltaY
         ymax = 0 + deltaY
-        print("Novo intervalo:", xmin, xmax, ymin, ymax)
+        print("xmin, xmax, ymin, ymax = %lf, %lf, %lf, %lf", xmin, xmax, ymin, ymax)
         update(xmin, xmax, ymin, ymax)
 
 
