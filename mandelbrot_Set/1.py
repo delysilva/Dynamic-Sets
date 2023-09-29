@@ -72,20 +72,20 @@ def on_click(event):
 
     if event.button is MouseButton.LEFT:
         print('Dando Zoom no conjunto de Mandelbrot')
-        deltaX = (xmax - xmin) / 4
-        deltaY = (ymax - ymin) / 4
+        deltaX = (xmax - xmin) / 3
+        deltaY = (ymax - ymin) / 3
         xmin = event.xdata - deltaX
         xmax = event.xdata + deltaX
-        ymin = event.ydata + deltaY
-        ymax = event.ydata - deltaY
+        ymin = event.ydata - deltaY
+        ymax = event.ydata + deltaY
         print("Novo intervalo:", xmin, xmax, ymin, ymax)
         update(xmin, xmax, ymin, ymax)
     elif event.button is MouseButton.RIGHT:
         print('Voltando ao conjunto de Mandelbrot original')
         update(-2.0, 1.0, -1.5, 1.5)
     else:
-        deltaX = (xmax - xmin) / 3
-        deltaY = (ymax - ymin) / 3
+        deltaX = (xmax - xmin) / 2 * 0.8
+        deltaY = (ymax - ymin) / 2 * 0.8
         xmin = -1.5 - deltaX
         xmax = -1.5 + deltaX
         ymin = 0 - deltaY
