@@ -1,7 +1,40 @@
 import numpy as np
 import matplotlib.pyplot as plt
-
+import sys
 from matplotlib.backend_bases import MouseButton
+
+if sys.argv[1] == 'julia':
+    conjunto = 'julia'
+else:
+    conjunto = 'mandelbrot'
+
+
+def iteracao_julia(c, i):
+    z = (c * c) + i
+    return z
+
+def julia(c, max_iter, i):
+    z = iteracao_julia(c, i)
+    for n in range(max_iter):
+        if abs(z) > 5:
+            return n
+        z = iteracao_julia(z, i)
+    return max_iter
+
+def gerar_conjunto_julia(largura, altura, xmin, xmax, ymin, ymax, max_iter, i):
+    imagem = np.zeros((altura, largura))
+
+    for x in range(largura):
+        for y in range(altura):
+            real = xmin + (x / (largura - 1)) * (xmax - xmin)
+            imag = ymin + (y / (altura - 1)) * (ymax - ymin)
+            c = complex(real, imag)
+
+            cor = julia(c, max_iter, i)
+            imagem[y, x] = cor
+
+    return imagem
+##################################################################################################################
 
 
 def mandelbrot(c, max_iter):
@@ -48,7 +81,7 @@ def gerar_conjunto_mandelbrot(largura, altura, xmin, xmax, ymin, ymax, max_iter)
 
 largura = 800
 altura = 800
-max_iter = 256
+max_iter = 200
 
 xmin, xmax, ymin, ymax = -2.0, 2.0, -2.0, 2.0
 
@@ -57,9 +90,15 @@ def update(xmin, xmax, ymin, ymax):
     """
     Gera a imagem com base no novo intervalo
     """
-    global largura, altura, max_iter
-    img = gerar_conjunto_mandelbrot(
-        largura, altura, xmin, xmax, ymin, ymax, max_iter)
+    global largura, altura, max_iter, i
+
+    if conjunto == 'julia':
+        img = gerar_conjunto_julia(
+            largura, altura, xmin, xmax, ymin, ymax, max_iter, i)
+    else:
+        img = gerar_conjunto_mandelbrot(
+            largura, altura, xmin, xmax, ymin, ymax, max_iter)
+        
     plt.imshow(img, cmap='hot', extent=(xmin, xmax, ymin, ymax))
     plt.draw()
 
@@ -71,17 +110,32 @@ def on_click(event):
     global xmin, xmax, ymin, ymax
 
     if event.button is MouseButton.LEFT:
-        print('Dando Zoom no conjunto de Mandelbrot')
-        deltaX = (xmax - xmin) / 3
-        deltaY = (ymax - ymin) / 3
+        print('Dando Zoom no conjunto')
+        deltaX = (xmax - xmin)
+        deltaY = (ymax - ymin)
+        deltaX = deltaX *0.4
+        deltaY = deltaY *0.4
+
+        if(deltaX < 0):
+            deltaX = deltaX * -1
+        if(deltaY < 0):
+            deltaY = deltaY * -1
+        
+
+        print("Xmin: ",xmin, "Xmax: ",xmax, ymin, ymax)
+
         xmin = event.xdata - deltaX
         xmax = event.xdata + deltaX
         ymin = event.ydata + deltaY
         ymax = event.ydata - deltaY
+        
         print("Novo intervalo:", xmin, xmax, ymin, ymax)
+        print("mouse em: ", event.xdata, event.ydata)
+        print("deltaX: ", deltaX, "deltaY: ", deltaY)
         update(xmin, xmax, ymin, ymax)
     elif event.button is MouseButton.RIGHT:
-        print('Voltando ao conjunto de Mandelbrot original')
+        print('Voltando ao conjunto original')
+        xmin, xmax, ymin, ymax = -2.0, 2.0, -2.0, 2.0
         update(-2.0, 2.0, -2.0, 2.0)
     else:
         deltaX = (xmax - xmin) / 2 * 0.8
@@ -95,8 +149,23 @@ def on_click(event):
 
 
 plt.connect('button_press_event', on_click)
+
+if conjunto == 'julia':
+# Exibindo a imagem
+    #Gerando o conjunto de Julia
+    i = 0.6
+    imagem1 = gerar_conjunto_julia(
+        largura, altura, xmin, xmax, ymin, ymax, max_iter, i)
+    plt.imshow(imagem1, extent=(xmin, xmax, ymin, ymax), cmap='hot')
+    plt.colorbar()
+    plt.title("Conjunto de Julia")
+    plt.show()
+else:
+
 # Gera a imagem inicial
-img = gerar_conjunto_mandelbrot(
-    largura, altura, xmin, xmax, ymin, ymax, max_iter)
-plt.imshow(img, cmap='hot', extent=(xmin, xmax, ymin, ymax))
-plt.show()
+    img = gerar_conjunto_mandelbrot(
+        largura, altura, xmin, xmax, ymin, ymax, max_iter)
+    plt.imshow(img, cmap='hot', extent=(xmin, xmax, ymin, ymax))
+    plt.colorbar()
+    plt.title("Conjunto de Mandelbrot")
+    plt.show()
