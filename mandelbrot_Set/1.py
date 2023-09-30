@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sys
 from matplotlib.backend_bases import MouseButton
+from numba import jit
 
 if sys.argv[1] == 'julia':
     conjunto = 'julia'
@@ -20,7 +21,6 @@ def julia(c, max_iter, i):
             return n
         z = iteracao_julia(z, i)
     return max_iter
-
 def gerar_conjunto_julia(largura, altura, xmin, xmax, ymin, ymax, max_iter, i):
     imagem = np.zeros((altura, largura))
 
@@ -36,7 +36,7 @@ def gerar_conjunto_julia(largura, altura, xmin, xmax, ymin, ymax, max_iter, i):
     return imagem
 ##################################################################################################################
 
-
+@jit
 def mandelbrot(c, max_iter):
     z = c
     # itera até que z "escape" (tenha a possibilidade de divergir)
@@ -52,7 +52,7 @@ def mandelbrot(c, max_iter):
 
 # função que gera o conjunto de Mandelbrot (parâmetros: largura {referente ao eixo x}, altura {referente ao eixo y}
 
-
+@jit
 def gerar_conjunto_mandelbrot(largura, altura, xmin, xmax, ymin, ymax, max_iter):
     # cria uma matriz de zeros com as dimensões da imagem
     imagem = np.zeros((altura, largura))
@@ -64,11 +64,16 @@ def gerar_conjunto_mandelbrot(largura, altura, xmin, xmax, ymin, ymax, max_iter)
             # essa operação é feita para cada pixel da imagem
 
             # a coordenada x é normalizada para o intervalo [0, 1]
+            # a parte real de c é um número no intervalo [xmin, xmax]
             real = xmin + (x / (largura - 1)) * (xmax - xmin)
 
-            # a coordenada y é invertida para que o eixo y aponte para cima
-            imag = ymin + (y / (altura - 1)) * (ymax - ymin)
+            # CORRIGIDO
+            # a parte imaginária de c é um número no intervalo [ymin, ymax]
+            imag = ymax - (y / (altura - 1)) * (ymax - ymin)
+
+
             # c é o número complexo que representa o pixel
+            # a função complex() cria um número complexo a partir das partes real e imaginária
             c = complex(real, imag)
 
             # cor é o número de iterações para o pixel c
@@ -79,9 +84,9 @@ def gerar_conjunto_mandelbrot(largura, altura, xmin, xmax, ymin, ymax, max_iter)
     return imagem
 
 
-largura = 800
-altura = 800
-max_iter = 200
+largura = 1200
+altura = 1200
+max_iter = 256
 
 xmin, xmax, ymin, ymax = -2.0, 2.0, -2.0, 2.0
 
@@ -111,24 +116,31 @@ def on_click(event):
 
     if event.button is MouseButton.LEFT:
         print('Dando Zoom no conjunto')
+    # calculamos a amplitude do intervalo em x e y
         deltaX = (xmax - xmin)
         deltaY = (ymax - ymin)
+
+    # reduzimos a amplitude em 60%
         deltaX = deltaX *0.4
         deltaY = deltaY *0.4
 
+    # para garantir que o intervalo seja positivo
         if(deltaX < 0):
             deltaX = deltaX * -1
         if(deltaY < 0):
             deltaY = deltaY * -1
         
 
+
         print("Xmin: ",xmin, "Xmax: ",xmax, ymin, ymax)
 
+    # calculamos o novo intervalo
         xmin = event.xdata - deltaX
         xmax = event.xdata + deltaX
-        ymin = event.ydata + deltaY
-        ymax = event.ydata - deltaY
+        ymin = event.ydata - deltaY
+        ymax = event.ydata + deltaY
         
+    
         print("Novo intervalo:", xmin, xmax, ymin, ymax)
         print("mouse em: ", event.xdata, event.ydata)
         print("deltaX: ", deltaX, "deltaY: ", deltaY)
