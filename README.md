@@ -59,16 +59,6 @@ Similar to `md1.py`, this script projects the Julia set onto a three-dimensional
 
 ## How to Run
 
-1. **Install Dependencies**
-   Ensure you have Python 3.x installed along with the required libraries. You can install the dependencies using pip:
-   ```bash
-   pip install numpy matplotlib numba
-
-Here is the transformed "How to Run" section and subsequent content into Markdown:
-
-```markdown
-## How to Run
-
 1. **Install Dependencies**  
    Ensure you have Python 3.x installed along with the required libraries. You can install the dependencies using pip:
    ```bash
