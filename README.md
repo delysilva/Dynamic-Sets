@@ -5,16 +5,27 @@ This project involves the generation and visualization of the Mandelbrot and Jul
 ## Directory Structure
 
 ├── double_window
+
 │ └── work.py
+
 ├── julia_cheio
+
 │ └── julia_cheio.py
+
 ├── multibrot
+
 │ └── new_version.py
+
 ├── pre_images
+
 │ ├── contorno.py
+
 │ └── pre.py
+
 └── sphere
+
 ├── md1.py
+
 └── ju1.py
 
 
