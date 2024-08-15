@@ -93,5 +93,3 @@ Similar to `md1.py`, this script projects the Julia set onto a three-dimensional
 - Numpy
 - Matplotlib
 - Numba
-
-This Markdown section includes clear instructions on how to install dependencies, navigate directories, run scripts, and interact with the visualizations.
