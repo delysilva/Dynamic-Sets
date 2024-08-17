@@ -18,15 +18,15 @@ This project involves the generation and visualization of the Mandelbrot and Jul
 
 ├── pre_images
 
-│ ├── contorno.py
+│ └── contorno.py
 
 │ └── pre.py
 
-└── sphere
+├── sphere
 
-├── md1.py
+│ └── md1.py
 
-└── ju1.py
+│ └── ju1.py
 
 
 ## File Descriptions
